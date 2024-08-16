@@ -15,7 +15,7 @@ import { useAuth } from "./AuthProvider";
 export default function Chat() {
   const { user } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [waiting, setWaiting] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(false);
   const [curTask, setCurTask] = useState<Task>();
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesRef = useRef<HTMLUListElement>(null);
@@ -47,7 +47,7 @@ export default function Chat() {
 
   async function sendMessage(message: string) {
     addMessage("user", message);
-    setWaiting(true);
+    setIsWaiting(true);
 
     let reply: ChatMessage | undefined;
     try {
@@ -61,7 +61,7 @@ export default function Chat() {
           async onChunk(chunk: string) {
             if (!reply) {
               reply = addMessage("bot", chunk);
-              setWaiting(false);
+              setIsWaiting(false);
             } else {
               reply.message += chunk;
               curMessageRef.current!.innerText += chunk;
@@ -79,14 +79,14 @@ export default function Chat() {
     } finally {
       curMessageRef.current!.innerHTML =
         curMessageRef.current!.innerHTML.replace("█", "");
-      setWaiting(false);
+      setIsWaiting(false);
     }
   }
 
   async function genTask() {
     setCurTask(undefined);
     setMessages([]);
-    setWaiting(true);
+    setIsWaiting(true);
 
     try {
       const resp = await apiFetch<GenTaskResponse>("tasks", { method: "POST" });
@@ -96,13 +96,13 @@ export default function Chat() {
       console.error("Failed to send message", e);
       addMessage("error", "Failed to send message");
     } finally {
-      setWaiting(false);
+      setIsWaiting(false);
     }
   }
 
   async function sendReply(type: TaskReplyType) {
     if (!curTask) return;
-    setWaiting(true);
+    setIsWaiting(true);
     try {
       const resp = await apiFetch("replies", {
         method: "POST",
@@ -117,7 +117,7 @@ export default function Chat() {
       console.error("Failed to send reply", e);
       alert("Failed to send reply");
     } finally {
-      setWaiting(false);
+      setIsWaiting(false);
     }
   }
 
@@ -170,13 +170,13 @@ export default function Chat() {
         {!!curTask && (
           <li key="task" className="task">
             <div
-              className="markdown"
+              className="prose"
               dangerouslySetInnerHTML={{
-                __html: `<strong>Task:</strong> ${curTask.description}`,
+                __html: marked.parse("**Task:** " + curTask.description),
               }}
             />
 
-            <div className="flex flex-wrap justify-end gap-2 mt-2">
+            <div className="flex flex-wrap justify-end gap-2 mt-3">
               {curTask.reply ? (
                 <div title={curTask.reply.comment} className="text-sm mr-6">
                   <strong>Replied:</strong> {curTask.reply.type}
@@ -188,13 +188,25 @@ export default function Chat() {
                     className="w-full border border-gray-300 p-1 text-sm"
                     placeholder="Add a comment..."
                   ></textarea>
-                  <button className="small" onClick={() => sendReply("accept")}>
+                  <button
+                    disabled={isWaiting}
+                    className="small"
+                    onClick={() => sendReply("accept")}
+                  >
                     Accept
                   </button>
-                  <button className="small" onClick={() => sendReply("reject")}>
+                  <button
+                    disabled={isWaiting}
+                    className="small"
+                    onClick={() => sendReply("reject")}
+                  >
                     Reject
                   </button>
-                  <button className="small" onClick={() => sendReply("later")}>
+                  <button
+                    disabled={isWaiting}
+                    className="small"
+                    onClick={() => sendReply("later")}
+                  >
                     Later
                   </button>
                 </>
@@ -213,7 +225,7 @@ export default function Chat() {
             />
           </li>
         ))}
-        {waiting && (
+        {isWaiting && (
           <li key="waiting" className="waiting">
             <Loader className="animate-spin" />
           </li>

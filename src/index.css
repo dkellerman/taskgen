@@ -27,6 +27,9 @@
   li {
     @apply m-0;
   }
+  a, a:visited {
+    @apply text-blue-700 no-underline hover:underline;
+  }
 }
 
 li {
