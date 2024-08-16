@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import { IBM_Plex_Sans } from "next/font/google";
 import { marked } from "marked";
@@ -23,30 +23,7 @@ export default function Home() {
   const curMessageRef = useRef<HTMLDivElement>(null);
   const mounted = useRef(false);
 
-  useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      fetchUser();
-    }
-  }, []);
-
-  function addMessage(
-    from: ChatMessage["from"],
-    message: ChatMessage["message"]
-  ) {
-    const newMsg: ChatMessage = {
-      from,
-      message,
-      sentAt: new Date().toISOString(),
-    };
-    flushSync(() => {
-      setMessages((prev) => [...prev, newMsg]);
-    });
-    scrollToBottom();
-    return newMsg;
-  }
-
-  async function fetchUser() {
+  const fetchUser = useCallback(async function fetchUser() {
     try {
       const user = await apiFetch("auth");
       console.log("user", user);
@@ -62,6 +39,29 @@ export default function Home() {
     } catch (e) {
       console.error("Failed to fetch user", e);
     }
+  }, []);
+
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      fetchUser();
+    }
+  }, [fetchUser]);
+
+  function addMessage(
+    from: ChatMessage["from"],
+    message: ChatMessage["message"]
+  ) {
+    const newMsg: ChatMessage = {
+      from,
+      message,
+      sentAt: new Date().toISOString(),
+    };
+    flushSync(() => {
+      setMessages((prev) => [...prev, newMsg]);
+    });
+    scrollToBottom();
+    return newMsg;
   }
 
   async function sendMessage(message: string) {

@@ -3,8 +3,8 @@ import { z } from "zod";
 
 export const taskGenPrompt = PromptTemplate.fromTemplate(
   `
-    Generate a quick 5-10 minute task for me to complete towards the following goal:
-    <goal>{goal}</goal>
+    Generate a quick 5-10 minute task for the user to complete towards
+    the following goal: <goal>{goal}</goal>
 
     You can use very basic markdown to format the tasks, only: bold, italic,
     or a link to an exceedingly good and specific resource.
@@ -36,12 +36,11 @@ export const chatPrompt = PromptTemplate.fromTemplate(
     The user's current task is: <task>{task}</task>
 
     Context:
-      <current_goal>{goal}</current_goal>
+    <current_goal>{goal}</current_goal>
 
-      <chat_history>
-      {history}
-      </chat_history>
-
+    <chat_history>
+    {history}
+    </chat_history>
 
     Here is the user's message:
     <message>{message}</message>

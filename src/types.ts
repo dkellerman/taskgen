@@ -43,8 +43,4 @@ export interface Goal {
   created: string;
 }
 
-export type GenTaskResponse =
-  | {
-      task: Task;
-    }
-  | { error: string };
+export type GenTaskResponse = { task: Task } | { error: string };
