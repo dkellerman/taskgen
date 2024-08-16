@@ -6,15 +6,23 @@ import { NextApiRequest } from "next";
 export async function getUser(req: NextApiRequest): Promise<User | null> {
   const tok = req.headers.authorization;
   if (!tok || !tok.startsWith("Bearer ")) return null;
+
   const token = tok.slice(7);
-  const user = await kv.get<User>(`user:${token}`);
+  const timezone = req.headers["x-tz"] as string;
+
+  let user = await kv.get<User>(`user:${token}`);
   if (!user) {
-    return await createUser(token);
+    user = await createUser(token, timezone);
+  } else {
+    if (user.timezone !== timezone) {
+      user.timezone = timezone;
+      await saveUser(user);
+    }
   }
   return { ...user, curTask: user.tasks.slice(-1)[0] };
 }
 
-export async function createUser(token: string) {
+export async function createUser(token: string, timezone?: string) {
   // fixme: hacky
   const curTask = {
     uid: uuid(),
@@ -43,6 +51,7 @@ export async function createUser(token: string) {
     },
     tasks: [curTask],
     curTask,
+    timezone,
     created: new Date().toISOString(),
   };
   await saveUser(user);

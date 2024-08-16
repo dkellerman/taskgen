@@ -6,6 +6,7 @@ export async function apiFetch<T>(url: string, opts: any = {}): Promise<any> {
     headers: {
       ...opts.headers,
       "Content-Type": "application/json",
+      "x-tz": Intl.DateTimeFormat().resolvedOptions().timeZone,
       Authorization: token ? `Bearer ${token}` : undefined,
     },
     ...opts,
@@ -33,6 +34,7 @@ export async function apiStream(
     headers: {
       ...opts.headers,
       "Content-Type": "application/json",
+      "x-tz": Intl.DateTimeFormat().resolvedOptions().timeZone,
       Authorization: token ? `Bearer ${token}` : undefined,
     },
     ...opts,

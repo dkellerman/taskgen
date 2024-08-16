@@ -5,6 +5,7 @@ export interface User {
   doc: GoalsDoc;
   tasks: Task[];
   curTask: Task;
+  timezone?: string;
   created: string;
   updated?: string;
 }

@@ -4,6 +4,7 @@ import { GenTaskResponse, Task } from "@/types";
 import { openAI as llm } from "@/utils/llm";
 import { getUser, saveUser } from "@/utils/users";
 import { taskGenPrompt, taskGenSchema } from "@/utils/prompts";
+import { toZonedTime } from "date-fns-tz";
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,7 +32,7 @@ export default async function handler(
 
   const prompt = await taskGenPrompt.format({
     goal: task.goal?.text || user.doc.content,
-    now: new Date().toISOString(),
+    now: toZonedTime(new Date(), user.timezone ?? "UTC"),
     userMsg: "N/A",
   });
   console.debug(prompt);
