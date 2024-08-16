@@ -25,6 +25,7 @@ export function Layout() {
     <>
       <Head>
         <title>Goals</title>
+        <base target="_blank" />
         <meta name="description" content="Goals v0" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -32,7 +33,7 @@ export function Layout() {
 
       <div className={`${font.className}`}>
         <nav className="bg-blue-950 text-white p-4">
-          <h1 className="text-2xl">Goals</h1>
+          <h1 className="text-3xl">Goals</h1>
         </nav>
 
         <main className="flex w-[100dvw] h-[calc(100dvh-80px)] gap-32">
