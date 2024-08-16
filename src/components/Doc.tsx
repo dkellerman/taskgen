@@ -82,7 +82,9 @@ export default function Doc() {
         )}
       </header>
       <div
-        className={`p-2 h-full ${isSaving ? "opacity-50" : ""}`}
+        className={`p-2 h-full ${isSaving ? "opacity-50" : ""} ${
+          isEditing ? "border-gray-400 border" : ""
+        }`}
         ref={editorRef}
         contentEditable={isEditing}
         onClick={(e) => e.stopPropagation()}
