@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { marked } from "marked";
 import { Loader } from "lucide-react";
-import { ChatMessage, GenTaskResponse, MessageFrom, Task } from "@/types";
+import {
+  ChatMessage,
+  GenTaskResponse,
+  MessageFrom,
+  Task,
+  TaskReplyType,
+} from "@/types";
 import { apiFetch, apiStream } from "@/utils/api";
 import { useAuth } from "./AuthProvider";
 
@@ -14,6 +20,7 @@ export default function Chat() {
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesRef = useRef<HTMLUListElement>(null);
   const curMessageRef = useRef<HTMLDivElement>(null);
+  const replyCommentRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -93,6 +100,27 @@ export default function Chat() {
     }
   }
 
+  async function sendReply(type: TaskReplyType) {
+    if (!curTask) return;
+    setWaiting(true);
+    try {
+      const resp = await apiFetch("replies", {
+        method: "POST",
+        body: {
+          taskUid: curTask.uid,
+          type,
+          comment: replyCommentRef.current?.value?.trim(),
+        },
+      });
+      setCurTask({ ...curTask, reply: resp });
+    } catch (e) {
+      console.error("Failed to send reply", e);
+      alert("Failed to send reply");
+    } finally {
+      setWaiting(false);
+    }
+  }
+
   function scrollToBottom() {
     messagesRef.current?.scrollTo({
       top: messagesRef.current!.scrollHeight,
@@ -147,6 +175,31 @@ export default function Chat() {
                 __html: `<strong>Task:</strong> ${curTask.description}`,
               }}
             />
+
+            <div className="flex flex-wrap justify-end gap-2 mt-2">
+              {curTask.reply ? (
+                <div title={curTask.reply.comment} className="text-sm mr-6">
+                  <strong>Replied:</strong> {curTask.reply.type}
+                </div>
+              ) : (
+                <>
+                  <textarea
+                    ref={replyCommentRef}
+                    className="w-full border border-gray-300 p-1 text-sm"
+                    placeholder="Add a comment..."
+                  ></textarea>
+                  <button className="small" onClick={() => sendReply("accept")}>
+                    Accept
+                  </button>
+                  <button className="small" onClick={() => sendReply("reject")}>
+                    Reject
+                  </button>
+                  <button className="small" onClick={() => sendReply("later")}>
+                    Later
+                  </button>
+                </>
+              )}
+            </div>
           </li>
         )}
         {messages.map((msg, i) => (

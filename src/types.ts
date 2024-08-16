@@ -1,5 +1,14 @@
 export type MessageFrom = "user" | "bot" | "error" | "welcome";
 
+export interface User {
+  uid: string;
+  doc: GoalsDoc;
+  tasks: Task[];
+  curTask: Task;
+  created: string;
+  updated?: string;
+}
+
 export interface ChatMessage {
   from: MessageFrom;
   message: string;
@@ -12,15 +21,15 @@ export interface Task {
   description: string;
   tags: string[];
   chatHistory: ChatMessage[];
+  reply?: TaskReply;
   created: string;
 }
 
-export interface User {
-  uid: string;
-  doc: GoalsDoc;
-  curTask: Task;
+export type TaskReplyType = "accept" | "reject" | "later";
+export interface TaskReply {
+  type: TaskReplyType;
+  comment?: string;
   created: string;
-  updated?: string;
 }
 
 export interface GoalsDoc {

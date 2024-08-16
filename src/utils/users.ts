@@ -11,10 +11,19 @@ export async function getUser(req: NextApiRequest): Promise<User | null> {
   if (!user) {
     return await createUser(token);
   }
-  return user;
+  return { ...user, curTask: user.tasks.slice(-1)[0] };
 }
 
 export async function createUser(token: string) {
+  // fixme: hacky
+  const curTask = {
+    uid: uuid(),
+    description: "N/A",
+    chatHistory: [],
+    tags: [],
+    created: new Date().toISOString(),
+  };
+
   const user: User = {
     uid: token,
     doc: {
@@ -32,13 +41,8 @@ export async function createUser(token: string) {
       `.trim(),
       created: new Date().toISOString(),
     },
-    curTask: {
-      uid: uuid(),
-      description: "N/A",
-      chatHistory: [],
-      tags: [],
-      created: new Date().toISOString(),
-    },
+    tasks: [curTask],
+    curTask,
     created: new Date().toISOString(),
   };
   await saveUser(user);

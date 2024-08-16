@@ -39,9 +39,16 @@ export default async function handler(
   const response = await llm
     .withStructuredOutput<Partial<Task>>(taskGenSchema, { name: "task" })
     .invoke(prompt);
-  task.description = response.description || "Hm, something went wrong";
+
+  if (!response.description?.trim()) {
+    res.status(500).json({ error: "Failed to generate task" });
+    return;
+  }
+
+  task.description = response.description;
   task.tags = response.tags || [];
-  user.curTask = task;
+  user.tasks.push(task);
   await saveUser(user);
+
   res.status(200).json({ task });
 }
