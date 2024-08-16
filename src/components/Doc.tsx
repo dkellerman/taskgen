@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "./AuthProvider";
-import { set } from "date-fns";
+import { apiFetch } from "@/utils/api";
+import { GoalsDoc } from "@/types";
 
 export default function Doc() {
   const { user } = useAuth();
-  const [content, setContent] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!user) return;
-    setContent(user.doc.content);
+    editorRef.current!.innerHTML = formatDocContentAsHTML(user.doc.content);
   }, [user]);
 
   useEffect(() => {
@@ -21,18 +22,33 @@ export default function Doc() {
     }
   }, [isEditing]);
 
-  function save() {
-    setIsEditing(false);
-    setContent(editorRef.current!.innerText);
+  function edit() {
+    setIsEditing(true);
+  }
+
+  async function save() {
+    if (!user || !editorRef.current) return;
+    setIsSaving(true);
+    try {
+      await apiFetch<GoalsDoc>("docs", {
+        method: "PUT",
+        body: {
+          uid: user.doc.uid,
+          content: editorRef.current.innerText,
+        },
+      });
+    } catch (e) {
+      console.error("Failed saving", e);
+      alert("Something went wrong saving the document. Please try again.");
+    } finally {
+      setIsEditing(false);
+      setIsSaving(false);
+    }
   }
 
   function cancel() {
     setIsEditing(false);
-    editorRef.current!.innerHTML = formatDocContentAsHTML(content);
-  }
-
-  function edit() {
-    setIsEditing(true);
+    editorRef.current!.innerHTML = formatDocContentAsHTML(user!.doc.content);
   }
 
   function formatDocContentAsHTML(content: string) {
@@ -48,7 +64,11 @@ export default function Doc() {
 
         {isEditing ? (
           <>
-            <button className="small" onClick={() => save()}>
+            <button
+              className="small"
+              onClick={() => save()}
+              disabled={isSaving}
+            >
               Save
             </button>
             <button className="small" onClick={() => cancel()}>
@@ -62,13 +82,10 @@ export default function Doc() {
         )}
       </header>
       <div
-        className="p-2 h-full"
+        className={`p-2 h-full ${isSaving ? "opacity-50" : ""}`}
         ref={editorRef}
         contentEditable={isEditing}
         onClick={(e) => e.stopPropagation()}
-        dangerouslySetInnerHTML={{
-          __html: formatDocContentAsHTML(content),
-        }}
       />
     </div>
   );

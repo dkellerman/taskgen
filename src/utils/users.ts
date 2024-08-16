@@ -46,5 +46,6 @@ export async function createUser(token: string) {
 }
 
 export async function saveUser(user: User) {
+  user.updated = new Date().toISOString();
   return await kv.set(`user:${user.uid}`, user);
 }

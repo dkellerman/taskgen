@@ -4,12 +4,12 @@ export async function apiFetch<T>(url: string, opts: any = {}): Promise<any> {
   const token = getToken();
   const resp = await fetch(`/api/${url}`, {
     headers: {
+      ...opts.headers,
       "Content-Type": "application/json",
       Authorization: token ? `Bearer ${token}` : undefined,
-      ...opts.headers,
     },
-    body: opts.body ? JSON.stringify(opts.body) : undefined,
     ...opts,
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
   });
 
   if (!resp.ok) {

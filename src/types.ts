@@ -20,6 +20,7 @@ export interface User {
   doc: GoalsDoc;
   curTask: Task;
   created: string;
+  updated?: string;
 }
 
 export interface GoalsDoc {
