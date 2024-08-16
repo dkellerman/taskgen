@@ -233,14 +233,14 @@ export default function Chat() {
       </ul>
 
       <footer className="p-2">
-        <form className="flex flex-row gap-1" onSubmit={handleSubmit}>
+        <form className="flex flex-row gap-0" onSubmit={handleSubmit}>
           <input
             ref={inputRef}
-            className="flex-1 border-gray-300 border p-1"
+            className="flex-1 border-gray-300 border p-1 border-r-0"
             type="text"
             onKeyDown={handleKeyDown}
           />
-          <button className="primary">Send</button>
+          <button className="primary appended">Send</button>
         </form>
       </footer>
     </div>
