@@ -22,10 +22,14 @@ export async function createUser(token: string) {
       content: `
       # This year
       - Write a book
-      - Start a podcast
-      - Learn to play the guitar
-      - Learn to cook
-      `,
+      - Build a rocket ship
+      - Learn to play the tuba
+      - Learn to cook gourmet meals
+
+      # Daily
+      - Meditate 5 minutes
+      - Exercise
+      `.trim(),
       created: new Date().toISOString(),
     },
     curTask: {
