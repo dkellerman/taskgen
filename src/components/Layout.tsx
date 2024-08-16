@@ -31,11 +31,11 @@ export function Layout() {
       </Head>
 
       <div className={`${font.className}`}>
-        <nav className="bg-blue-200 p-4">
+        <nav className="bg-blue-950 text-white p-4">
           <h1 className="text-2xl">Goals</h1>
         </nav>
 
-        <main className="flex w-[100dvw] h-[calc(100dvh-80px)]">
+        <main className="flex w-[100dvw] h-[calc(100dvh-80px)] gap-32">
           <section className="flex-1 flex-col">
             <Doc />
           </section>
