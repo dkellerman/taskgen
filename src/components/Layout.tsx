@@ -36,11 +36,19 @@ export function Layout() {
         <nav className="bg-blue-950 text-white p-4 flex flex-row items-center">
           <h1 className="text-3xl">Goals</h1>
           <div className="flex-1" />
-          <div className="md:hidden">
-            <button className="underline mr-4" onClick={() => setTab("doc")}>
+          <div className="md:hidden flex gap-6">
+            <button
+              className="underline disabled:no-underline"
+              onClick={() => setTab("doc")}
+              disabled={tab === "doc"}
+            >
               Goals
             </button>
-            <button className="underline mr-2" onClick={() => setTab("chat")}>
+            <button
+              className="underline disabled:no-underline"
+              onClick={() => setTab("chat")}
+              disabled={tab === "chat"}
+            >
               Tasks
             </button>
           </div>
