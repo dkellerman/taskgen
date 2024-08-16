@@ -36,21 +36,18 @@ export interface TaskReply {
 export interface GoalsDoc {
   uid: string;
   content: string;
+  index: Record<string, Goal>;
   created: string;
   updated?: string;
 }
 
-export interface GoalCategory {
-  uid: string;
-  text: string;
-  parent?: GoalCategory;
-  rrule?: string;
-  created: string;
-}
-
 export interface Goal {
-  uid: string;
+  path: string;
   text: string;
+  categoryDepth?: number;
+  listDepth?: number;
+  doneAt?: string;
+  lastUsedAt?: string;
   created: string;
 }
 

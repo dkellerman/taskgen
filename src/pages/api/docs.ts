@@ -1,3 +1,4 @@
+import { indexGoals } from "@/utils/goals";
 import { getUser, saveUser } from "@/utils/users";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -24,6 +25,7 @@ export default async function handlerWithUser(
   }
 
   user.doc.content = content;
+  user.doc.index = indexGoals(content);
   user.doc.updated = new Date().toISOString();
   await saveUser(user);
 

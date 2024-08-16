@@ -5,6 +5,7 @@ import { openAI as llm } from "@/utils/llm";
 import { getUser, saveUser } from "@/utils/users";
 import { taskGenPrompt, taskGenSchema } from "@/utils/prompts";
 import { toZonedTime } from "date-fns-tz";
+import { chooseGoal } from "@/utils/goals";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,19 +22,23 @@ export default async function handler(
     return;
   }
 
+  const goal = chooseGoal(user.doc.index) ?? undefined;
+
   const task: Task = {
     uid: uuid(),
     description: "",
     chatHistory: [],
     tags: [],
     created: new Date().toISOString(),
-    // goal: ...
+    goal,
   };
 
+  const category = goal?.path.split("|").slice(0, -1).join(" -> ") || "N/A";
   const prompt = await taskGenPrompt.format({
-    goal: task.goal?.text || user.doc.content,
+    goal: goal?.text || user.doc.content,
+    category,
     now: toZonedTime(new Date(), user.timezone ?? "UTC"),
-    userMsg: "N/A",
+    userMsg: req.body?.userMsg ?? "N/A",
   });
   console.debug(prompt);
 
@@ -46,6 +51,7 @@ export default async function handler(
     return;
   }
 
+  if (goal) goal.lastUsedAt = new Date().toISOString();
   task.description = response.description;
   task.tags = response.tags || [];
   user.tasks.push(task);

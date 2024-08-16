@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import { kv } from "@vercel/kv";
 import { User } from "@/types";
 import { NextApiRequest } from "next";
+import { EXAMPLE_GOALS_DOC, indexGoals } from "./goals";
 
 export async function getUser(req: NextApiRequest): Promise<User | null> {
   const tok = req.headers.authorization;
@@ -36,17 +37,8 @@ export async function createUser(token: string, timezone?: string) {
     uid: token,
     doc: {
       uid: uuid(),
-      content: `
-      # This year
-      - Write a book
-      - Build a rocket ship
-      - Learn to play the tuba
-      - Learn to cook gourmet meals
-
-      # Daily
-      - Meditate 5 minutes
-      - Exercise
-      `.trim(),
+      content: EXAMPLE_GOALS_DOC,
+      index: indexGoals(EXAMPLE_GOALS_DOC),
       created: new Date().toISOString(),
     },
     tasks: [curTask],
