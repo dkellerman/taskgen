@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import { IBM_Plex_Sans } from "next/font/google";
 import { useAuth } from "@/components/AuthProvider";
@@ -12,6 +12,7 @@ const font = IBM_Plex_Sans({
 
 export function Layout() {
   const { fetchUser } = useAuth();
+  const [tab, setTab] = useState<"doc" | "chat">("doc"); // mobile-only
   const mounted = useRef(false);
 
   useEffect(() => {
@@ -32,15 +33,32 @@ export function Layout() {
       </Head>
 
       <div className={`${font.className}`}>
-        <nav className="bg-blue-950 text-white p-4">
+        <nav className="bg-blue-950 text-white p-4 flex flex-row gap-4">
           <h1 className="text-3xl">Goals</h1>
+          <div className="flex-1" />
+          <button className="underline" onClick={() => setTab("doc")}>
+            Goals
+          </button>
+          <button className="underline" onClick={() => setTab("chat")}>
+            Tasks
+          </button>
         </nav>
 
         <main className="flex w-[100dvw] h-[calc(100dvh-80px)] gap-32">
-          <section className="flex-1 flex-col">
+          <section
+            className={`flex-1 flex-col ${
+              tab === "chat" ? "hidden" : ""
+            } md:block`}
+          >
             <Doc />
           </section>
-          <section className="flex flex-col w-[600px] border border-gray-300 rounded m-4 mr-6 shadow-lg">
+          <section
+            className={
+              `flex flex-col w-[600px] border border-gray-300 rounded ` +
+              `m-0 md:m-4 md:mr-6 shadow-lg ` +
+              `${tab === "doc" ? "hidden" : ""} md:block`
+            }
+          >
             <Chat />
           </section>
         </main>

@@ -58,7 +58,7 @@ export default function Doc() {
   }
 
   return (
-    <div className="px-6 py-8 h-full flex flex-col gap-4">
+    <div className="p-3 md:px-6 md:py-8 h-full flex flex-col gap-4">
       <header className="border-b border-gray-300 pb-2 flex justify-start items-center gap-1">
         <h2 className="text-2xl mr-4">My goals</h2>
 
