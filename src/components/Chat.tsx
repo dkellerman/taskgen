@@ -59,7 +59,7 @@ export default function Chat() {
               reply.message += chunk;
               curMessageRef.current!.innerText += chunk;
               curMessageRef.current!.innerHTML = await marked.parse(
-                reply.message as string
+                (reply.message as string) + "█"
               );
             }
             scrollToBottom();
@@ -70,6 +70,8 @@ export default function Chat() {
       console.error("Failed to send message", e);
       addMessage("error", "Failed to send message");
     } finally {
+      curMessageRef.current!.innerHTML =
+        curMessageRef.current!.innerHTML.replace("█", "");
       setWaiting(false);
     }
   }
@@ -133,7 +135,10 @@ export default function Chat() {
         </button>
       </header>
 
-      <ul ref={messagesRef} className="flex-1 overflow-auto p-2 flex flex-col gap-2">
+      <ul
+        ref={messagesRef}
+        className="flex-1 overflow-auto p-2 flex flex-col gap-2"
+      >
         {!!curTask && (
           <li key="task" className="task">
             <div

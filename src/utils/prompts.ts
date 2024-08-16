@@ -6,7 +6,7 @@ export const taskGenPrompt = PromptTemplate.fromTemplate(
     Generate a quick 5-10 minute task for the user to complete towards
     the following goal: <goal>{goal}</goal>
 
-    You can use very basic markdown to format the tasks, only: bold, italic,
+    You can use very basic markdown to format the tasks, only: bold, italics,
     or a link to an exceedingly good and specific resource.
 
     Please take into account the user's current local time: <time>{now}</time>
@@ -48,6 +48,8 @@ export const chatPrompt = PromptTemplate.fromTemplate(
     Instructions: Reply specifically and succintly to the query, in the context
     of the task at hand. Use markdown for minor formatting only if necessary -
     bold, italics, and links.
+
+    Focus on action, and keep your responses brief.
 
     Your response: ...
   `.trim()
