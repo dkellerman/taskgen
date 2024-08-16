@@ -40,7 +40,7 @@ export function Layout() {
           <section className="flex-1 flex-col">
             <Doc />
           </section>
-          <section className="flex flex-col w-[600px]">
+          <section className="flex flex-col w-[600px] border border-gray-300 rounded m-4 mr-6 shadow-lg">
             <Chat />
           </section>
         </main>

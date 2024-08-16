@@ -90,9 +90,10 @@ export function chooseGoal(goals: Record<string, Goal>): Goal | null {
   return eligibleGoals[0];
 }
 
-export async function getRRule(user: User, text: string): Promise<string> {
+export async function getRRules(user: User, texts: string[]): Promise<string> {
+  const items = texts.map((text) => `<text>${text}</text>`).join("\n");
   const prompt = await rrulePrompt.format({
-    text,
+    items,
     now: toZonedTime(new Date(), user.timezone ?? "UTC"),
   });
   console.debug(prompt);

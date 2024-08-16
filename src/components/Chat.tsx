@@ -156,8 +156,8 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex flex-col h-full p-4">
-      <header className="flex flex-row justify-center border-b border-gray-300 p-2">
+    <div className="flex flex-col h-full">
+      <header className="flex flex-row justify-center border-b border-gray-300 bg-gray-100 p-2 shadow-md">
         <button className="primary" onClick={() => genTask()}>
           Generate task
         </button>
@@ -165,7 +165,7 @@ export default function Chat() {
 
       <ul
         ref={messagesRef}
-        className="flex-1 overflow-auto p-2 flex flex-col gap-2"
+        className="flex-1 overflow-auto p-4 flex flex-col gap-2"
       >
         {!!curTask && (
           <li key="task" className="task">

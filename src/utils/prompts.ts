@@ -61,6 +61,14 @@ export const chatPrompt = PromptTemplate.fromTemplate(
   `.trim()
 );
 
+export const rruleSchema = z.object({
+  rules: z.array(
+    z
+      .string()
+      .describe("RRULE string representing a time frame for one text item")
+  ),
+});
+
 // select all items from goals doc that are actionable right now
 export const rrulePrompt = PromptTemplate.fromTemplate(
   `
@@ -79,8 +87,10 @@ export const rrulePrompt = PromptTemplate.fromTemplate(
 
     If needed for reference, the user's current local time is: <time>{now}</time>
 
-    The text is: <text>{text}</text>
+    Here are the text items that I need RRULEs or empty strings for -
+    please provide one for each:
+    <text_items>{items}</text_items>
 
-    ICal RRULE or empty string: ...
+    Results: ...
   `.trim()
 );
