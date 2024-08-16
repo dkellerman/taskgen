@@ -33,15 +33,17 @@ export function Layout() {
       </Head>
 
       <div className={`${font.className}`}>
-        <nav className="bg-blue-950 text-white p-4 flex flex-row gap-4">
+        <nav className="bg-blue-950 text-white p-4 flex flex-row items-center">
           <h1 className="text-3xl">Goals</h1>
           <div className="flex-1" />
-          <button className="underline" onClick={() => setTab("doc")}>
-            Goals
-          </button>
-          <button className="underline" onClick={() => setTab("chat")}>
-            Tasks
-          </button>
+          <div className="md:hidden">
+            <button className="underline mr-4" onClick={() => setTab("doc")}>
+              Goals
+            </button>
+            <button className="underline mr-2" onClick={() => setTab("chat")}>
+              Tasks
+            </button>
+          </div>
         </nav>
 
         <main className="flex w-[100dvw] h-[calc(100dvh-80px)] gap-32">
