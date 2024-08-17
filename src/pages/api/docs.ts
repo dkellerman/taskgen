@@ -3,7 +3,7 @@ import { getUser, saveUser } from "@/utils/users";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 // PUT document content
-export default async function handlerWithUser(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

@@ -1,7 +1,7 @@
 # Taskgen app
 
-https://taskgen.vercel.app
-https://vercel.com/xfr/taskgen/settings/git
+- https://taskgen.vercel.app
+- https://vercel.com/xfr/taskgen/settings/git
 
 - `npm i`
 - `npm i -g vercel`
