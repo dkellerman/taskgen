@@ -158,7 +158,11 @@ export default function Chat() {
   return (
     <div className="flex flex-col h-full">
       <header className="flex flex-row justify-center border-b border-gray-300 bg-gray-100 p-2 shadow-md">
-        <button className="primary" onClick={() => genTask()}>
+        <button
+          className="primary"
+          onClick={() => genTask()}
+          disabled={isWaiting}
+        >
           Generate task
         </button>
       </header>

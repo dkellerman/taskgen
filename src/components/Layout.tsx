@@ -25,7 +25,7 @@ export function Layout() {
   return (
     <>
       <Head>
-        <title>Goals</title>
+        <title>Taskgen</title>
         <base target="_blank" />
         <meta name="description" content="Goals v0" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -34,7 +34,7 @@ export function Layout() {
 
       <div className={`${font.className}`}>
         <nav className="bg-blue-950 text-white p-4 flex flex-row items-center">
-          <h1 className="text-3xl">Goals</h1>
+          <h1 className="text-3xl">Taskgen</h1>
           <div className="flex-1" />
           <div className="md:hidden flex gap-6">
             <button
