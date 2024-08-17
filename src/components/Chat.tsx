@@ -189,7 +189,7 @@ export default function Chat() {
                 <>
                   <textarea
                     ref={replyCommentRef}
-                    className="w-full border border-gray-300 p-1 text-sm"
+                    className="w-full border border-gray-300 p-1"
                     placeholder="Add a comment..."
                   ></textarea>
                   <button
