@@ -42,7 +42,7 @@
 li {
   @apply py-2 px-4 rounded;
 
-  &.task {
+  &.task, &.welcome {
     @apply bg-slate-100 border border-gray-400 p-2 border-dotted;
   }
   &.msg-bot {
