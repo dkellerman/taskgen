@@ -179,7 +179,7 @@ export default function Chat() {
             />
 
             <div
-              className={clsx('flex flex-wrap justify-end gap-2 mt-3 ', {
+              className={clsx('flex flex-wrap justify-end gap-2 mt-3', {
                 'opacity-50': isWaiting,
               })}
             >
