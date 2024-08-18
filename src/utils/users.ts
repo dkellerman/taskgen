@@ -1,17 +1,17 @@
-import { v4 as uuid } from "uuid";
-import { kv } from "@vercel/kv";
-import { User } from "@/types";
-import { NextApiRequest } from "next";
-import { EXAMPLE_GOALS_DOC, indexGoals, updateRRules } from "./goals";
+import { v4 as uuid } from 'uuid';
+import { kv } from '@vercel/kv';
+import { User } from '@/types';
+import { NextApiRequest } from 'next';
+import { EXAMPLE_GOALS_DOC, EXAMPLE_GOALS_INDEX, updateRRules } from './goals';
 
 export async function getUser(req: NextApiRequest): Promise<User | null> {
   const tok = req.headers.authorization;
-  if (!tok || !tok.startsWith("Bearer ")) {
+  if (!tok || !tok.startsWith('Bearer ')) {
     return null;
   }
 
   const token = tok.slice(7);
-  const timezone = req.headers["x-tz"] as string;
+  const timezone = req.headers['x-tz'] as string;
 
   let user = await kv.get<User>(`user:${token}`);
   if (!user) {
@@ -29,7 +29,7 @@ export async function createUser(token: string, timezone?: string) {
   // fixme: hacky
   const curTask = {
     uid: uuid(),
-    description: "N/A",
+    description: 'N/A',
     chatHistory: [],
     tags: [],
     created: new Date().toISOString(),
@@ -40,7 +40,7 @@ export async function createUser(token: string, timezone?: string) {
     doc: {
       uid: uuid(),
       content: EXAMPLE_GOALS_DOC,
-      index: indexGoals(EXAMPLE_GOALS_DOC),
+      index: EXAMPLE_GOALS_INDEX,
       created: new Date().toISOString(),
     },
     tasks: [curTask],

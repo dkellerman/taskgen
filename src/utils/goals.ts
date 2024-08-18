@@ -63,19 +63,17 @@ export function chooseGoal(goals: Record<string, Goal>): Goal | null {
   const eligibleGoals = Object.values(goals)
     .filter(g => !!g.listDepth)
     .filter(g => {
-      console.log("=> goal", g.text, g.rrule);
+      console.log('=> goal', g.text, g.rrule);
       if (!g.rrule) return true;
       const r = RRule.fromString(g.rrule);
       const betw = r.between(new Date(), new Date());
       if (!!betw?.length) {
-        console.debug("\t* ELIG NOW", g.text, betw);
+        console.debug('\t* ELIG NOW', g.text, betw);
       } else {
-        console.debug("\t* NOT ELIG NOW", g.text);
+        console.debug('\t* NOT ELIG NOW', g.text);
       }
       return !!betw?.length;
-    })
-  ;
-
+    });
   if (eligibleGoals.length === 0) return null;
 
   // pick a random goal sometimes
@@ -114,17 +112,21 @@ export async function updateRRules(user: User, goals: Record<string, Goal>): Pro
   // fetch new rrules as a batch
   // TODO: the problem is that this overfetches for duplicated rules within the document,
   // it should really maintain an index (by getRRuleKey) rather than an array
-  const rrules = await fetchRRules(user, toFetch.map(g => g.text));
+  const rrules = await fetchRRules(
+    user,
+    toFetch.map(g => g.text),
+  );
   for (let i = 0; i < toFetch.length; i++) {
     const goal = toFetch[i];
-    if (rrules[i]) { // invalid rules are returned as null
+    if (rrules[i]) {
+      // invalid rules are returned as null
       goal.rrule = rrules[i]!.toString();
       await kv.set(getRRuleKey(goal.text), goal.rrule);
     }
   }
 }
 
-export async function fetchRRules(user: User, texts: string[]): Promise<Array<RRule|null>> {
+export async function fetchRRules(user: User, texts: string[]): Promise<Array<RRule | null>> {
   const items = texts.map(text => `<text>${text}</text>`).join('\n');
 
   const prompt = await rrulePrompt.format({
@@ -136,7 +138,7 @@ export async function fetchRRules(user: User, texts: string[]): Promise<Array<RR
   const response = await llm.withStructuredOutput(rruleSchema).invoke(prompt);
   console.debug('rrule resp', response);
 
-  const rrules: Array<RRule|null> = [];
+  const rrules: Array<RRule | null> = [];
   for (let i = 0; i < response.rules.length; i++) {
     if (!response.rules[i].rule || !response.rules[i].isTimeFrame) {
       rrules.push(null);
@@ -192,3 +194,5 @@ Here is an example - click “Randomize my life” above to generate a random on
 ## Evening
 - Read a book
 `;
+
+export const EXAMPLE_GOALS_INDEX = indexGoals(EXAMPLE_GOALS_DOC);
