@@ -120,8 +120,8 @@ export default function Doc() {
         </div>
       </header>
       <div
-        className={`overflow-auto p-2 h-full ${isSaving ? "opacity-50" : ""} ${
-          isEditing ? "border-gray-400 border" : ""
+        className={`overflow-auto h-full ${isSaving ? "opacity-50" : ""} ${
+          isEditing ? "border-gray-400 border p-2" : "p-0"
         }`}
         ref={editorRef}
         contentEditable={isEditing}

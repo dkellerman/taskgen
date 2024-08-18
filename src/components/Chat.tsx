@@ -133,8 +133,10 @@ export default function Chat() {
       {
         from: "welcome",
         message: `
-          Welcome to the Goals app! Edit your goals on the left.
-          Generate a task, and chat with me about it here.
+          <strong>Welcome to Taskgen!</strong>
+          Edit your goals on the left. Generate a task, and chat with me about
+          it here. You can accept or reject the tasks, and leave comments so
+          they will improve over time.
         `.trim(),
         sentAt: new Date().toISOString(),
       } as ChatMessage,
