@@ -104,7 +104,7 @@ export const rrulePrompt = PromptTemplate.fromTemplate(
 
 export const genGoalsDocPrompt = PromptTemplate.fromTemplate(
   `
-    Generate a list of goals and items. Format is very limited subset of markdown.
+    Generate a list of goals and items. Format is a limited subset of markdown.
 
     For categories: start with a # and a space, e.g. "# Health" or "# Daily". Use multiple
     hashes for nested categories, e.g. "## Exercise". These should either represent groupings
@@ -144,12 +144,6 @@ export const GOAL_PERSONAS = [
   successful products, scaling their business, and finding the right balance between creativity and
   profitability.`,
 
-  `The Health-Conscious Parent: Balancing family life with a commitment to health and wellness, the
-  Health-Conscious Parent starts their day with early morning workouts and nutritious meal planning.
-  They juggle parenting responsibilities with a focus on personal fitness and instilling healthy habits
-  in their children. Their goals include staying fit, ensuring their family leads a healthy lifestyle,
-  and creating a nurturing home environment.`,
-
   `The Aspiring Artist: Living in a world of color and expression, the Aspiring Artist dedicates their
   life to honing their craft, whether it’s painting, writing, or performing. Their lifestyle is marked
   by creative exploration, late-night inspirations, and a community of fellow artists. They prioritize
@@ -161,12 +155,6 @@ export const GOAL_PERSONAS = [
   revolves around coding marathons, tech meetups, and continuous learning. They aim to develop
   groundbreaking software, contribute to open-source projects, and stay ahead in the ever-evolving tech
   landscape.`,
-
-  `The Eco-Conscious Activist: Passionate about the environment, the Eco-Conscious Activist lives a
-  lifestyle centered on sustainability. They spend their time organizing community events, advocating
-  for policy changes, and educating others on eco-friendly practices. Their goals include reducing their
-  carbon footprint, influencing environmental policy, and fostering a global community of environmental
-  stewards.`,
 
   `The Digital Nomad: Embracing the freedom of location independence, the Digital Nomad works remotely
   from exotic locations, blending work with travel. Their lifestyle is one of exploration, flexibility,
@@ -188,4 +176,7 @@ export const GOAL_PERSONAS = [
   spiritual practices, meditation, and personal growth. Their lifestyle is introspective, focusing on
   mindfulness, inner peace, and connection with the universe. Their goals include achieving spiritual
   enlightenment, cultivating inner harmony, and helping others on their spiritual journeys.`,
+
+  `The regular laid-back person: This person enjoys a relaxed lifestyle, focusing on
+  simple pleasures and personal well-being.`,
 ];

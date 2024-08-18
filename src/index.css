@@ -26,9 +26,22 @@
 }
 
 .prose {
+  @apply max-w-none;
+  hr {
+    @apply my-6;
+  }
+  h1 {
+    @apply text-2xl mx-0 mt-4 mb-3;
+  }
+  h2 {
+    @apply text-xl mx-0 my-2;
+  }
+  h3 {
+    @apply text-lg mx-0 my-2;
+  }
   p,
   li {
-    @apply m-0 p-0;
+    @apply my-2 p-0;
   }
   ul {
     @apply mt-1 pl-4;
@@ -42,7 +55,8 @@
 li {
   @apply py-2 px-4 rounded;
 
-  &.task, &.msg-welcome {
+  &.task,
+  &.msg-welcome {
     @apply bg-blue-100 border border-gray-400 p-2 border-dotted;
   }
   &.msg-bot {

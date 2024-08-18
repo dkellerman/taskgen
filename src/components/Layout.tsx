@@ -54,7 +54,7 @@ export function Layout() {
           </div>
         </nav>
 
-        <main className="flex w-[100dvw] h-[calc(100dvh-80px)] gap-32">
+        <main className="flex w-[100dvw] h-[calc(100dvh-80px)] gap-12">
           <section
             className={`flex-1 flex-col ${
               tab === "chat" ? "hidden" : ""

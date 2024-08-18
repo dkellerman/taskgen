@@ -3,9 +3,10 @@ import { useAuth } from "./AuthProvider";
 import { apiFetch } from "@/utils/api";
 import { GoalsDoc } from "@/types";
 import { Loader } from "lucide-react";
+import { marked } from "marked";
 
 export default function Doc() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
@@ -24,6 +25,7 @@ export default function Doc() {
   }, [isEditing]);
 
   function edit() {
+    editorRef.current!.innerText = user!.doc.content;
     setIsEditing(true);
   }
 
@@ -39,6 +41,7 @@ export default function Doc() {
         },
       });
       editorRef.current!.innerHTML = formatDocContentAsHTML(newDoc.content);
+      setUser({ ...user, doc: newDoc });
     } catch (e) {
       console.error("Failed saving", e);
       alert("Something went wrong saving the document. Please try again.");
@@ -54,9 +57,11 @@ export default function Doc() {
   }
 
   function formatDocContentAsHTML(content: string) {
-    return content
-      .replace(/^(#+\s.*)/gm, "<strong>$1</strong>")
-      .replace(/\n/g, "<br>");
+    return marked
+      .parse(content, { async: false, gfm: true, breaks: true })
+      .replace(/^( +)/gm, (match) => {
+        return match.replace(/ /g, "\u00A0");
+      });
   }
 
   async function genGoals() {
@@ -127,9 +132,9 @@ export default function Doc() {
         </div>
       </header>
       <div
-        className={`overflow-auto h-full ${isSaving ? "opacity-50" : ""} ${
-          isEditing ? "border-gray-400 border p-2" : "p-0"
-        }`}
+        className={`prose overflow-auto h-full ${
+          isSaving ? "opacity-50" : ""
+        } ${isEditing ? "border-gray-400 border p-2" : "p-0"}`}
         ref={editorRef}
         contentEditable={isEditing}
         onClick={(e) => e.stopPropagation()}

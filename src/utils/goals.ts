@@ -106,13 +106,21 @@ export async function getRRules(user: User, texts: string[]): Promise<string> {
 
 export const EXAMPLE_GOALS_DOC =
   `
-This is your goals document. You can use "#" to make a category
-and "-" for an item. Categories can be groupings (e.g. "# Health"),
-or time frames (e.g. "# Daily"). You can also nest categories by using
-multiple #'s (e.g. "## Later this year").`.replace(/\n/g, " ") +
-  `
+This is your goals document. You can use “#” to make a category and “-”
+for an item. Categories can be groupings (e.g. “# Health”), or time frames
+(e.g. “# Daily”). You can also nest categories by using multiple “#”s
+(e.g. “## Later this year”).
 
-Here is an example (click "Randomize my life" to generate a random one!)
+You can use some [markdown](https://www.markdownguide.org/basic-syntax/)
+to style things. (Not well-tested yet)
+
+Here is an example - click “Randomize my life” above to generate a random one!
+`
+    .split("\n\n")
+    .map((l) => l.replace(/\n/g, " "))
+    .join("\n\n")
+    .trim() +
+  `
 
 # This year
 - Write a book
