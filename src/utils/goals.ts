@@ -111,6 +111,7 @@ and "-" for items. Categories can represent groupings (e.g. "# Health"),
 or time frames (e.g. "# Daily"). You can also nest categories by using
 multiple hashes.`.replace(/\n/g, " ") +
   `
+
 Here is an example (click "I'm feeling lucky" to generate a random one!)
 
 # This year
@@ -125,4 +126,4 @@ Here is an example (click "I'm feeling lucky" to generate a random one!)
 - Exercise
 ## Evening
 - Read a book
-`.trim();
+`;
