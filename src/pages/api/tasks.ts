@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { GenTaskResponse, Task, TaskVector } from "@/types";
-import { openAI as llm } from "@/utils/llm";
+import { countTokens, openAI as llm } from "@/utils/llm";
 import { getUser, saveUser } from "@/utils/users";
 import { taskGenPrompt, taskGenSchema } from "@/utils/prompts";
 import { toZonedTime } from "date-fns-tz";
@@ -44,7 +44,7 @@ export default async function handler(
     goodExamples: makeExamplesStr(goodExamples, "good"),
     badExamples: makeExamplesStr(badExamples, "bad"),
   });
-  console.debug(prompt);
+  console.debug(prompt, countTokens(prompt));
 
   const response = await llm
     .withStructuredOutput<Partial<Task>>(taskGenSchema, { name: "task" })

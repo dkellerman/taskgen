@@ -1,6 +1,6 @@
 import { marked, Token, Tokens } from "marked";
 import { Goal, User } from "@/types";
-import { groq as llm } from "./llm";
+import { countTokens, groq as llm } from "./llm";
 import { rrulePrompt } from "./prompts";
 import { toZonedTime } from "date-fns-tz";
 
@@ -83,12 +83,12 @@ export function chooseGoal(goals: Record<string, Goal>): Goal | null {
 
   // otherwise pick the least recently used goal
   eligibleGoals.sort((a, b) => {
-    // sort by lastUsedAt
+    if (!a.lastUsedAt && !b.lastUsedAt) return 0;
     if (!a.lastUsedAt) return -1;
     if (!b.lastUsedAt) return 1;
-    return new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime();
+    return new Date(a.lastUsedAt).getTime() - new Date(b.lastUsedAt).getTime();
   });
-  return eligibleGoals[eligibleGoals.length - 1];
+  return eligibleGoals[0];
 }
 
 export async function getRRules(user: User, texts: string[]): Promise<string> {
@@ -97,7 +97,7 @@ export async function getRRules(user: User, texts: string[]): Promise<string> {
     items,
     now: toZonedTime(new Date(), user.timezone ?? "UTC"),
   });
-  console.debug(prompt);
+  console.debug(prompt, countTokens(prompt));
 
   const response = await llm.invoke(prompt);
   console.debug("rrule resp", response);

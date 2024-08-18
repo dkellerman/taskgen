@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "./AuthProvider";
 import { apiFetch } from "@/utils/api";
 import { GoalsDoc } from "@/types";
+import { Loader } from "lucide-react";
 
 export default function Doc() {
   const { user } = useAuth();
@@ -57,29 +58,66 @@ export default function Doc() {
       .replace(/\n/g, "<br>");
   }
 
+  async function genGoals() {
+    setIsSaving(true);
+    try {
+      const response = await apiFetch<string>("docs", { method: "POST" });
+      editorRef.current!.innerText = response.content;
+      setIsEditing(true);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to generate goals. Please try again.");
+      setIsSaving(false);
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
   return (
     <div className="p-3 md:px-6 md:py-8 h-full flex flex-col gap-4">
-      <header className="border-b border-gray-300 pb-2 flex justify-start items-center gap-4">
-        <h2 className="text-2xl mr-4 -mt-1.5">Goals</h2>
+      <header className="border-b border-gray-300 pb-2 flex justify-start items-center">
+        <h2 className="text-2xl mr-8 -mt-1.5">Goals</h2>
 
-        {isEditing ? (
-          <>
-            <button
-              className="small"
-              onClick={() => save()}
-              disabled={isSaving}
-            >
-              Save
-            </button>
-            <button className="small" onClick={() => cancel()}>
-              Cancel
-            </button>
-          </>
-        ) : (
-          <button className="small" onClick={() => edit()}>
-            Edit
-          </button>
-        )}
+        <div className={`flex items-center gap-3 w-full ${isSaving ? "opacity-50" : ""}`}>
+          {isEditing ? (
+            <>
+              <button
+                className="small"
+                onClick={() => save()}
+                disabled={isSaving}
+              >
+                Save
+              </button>
+              <button
+                className="small"
+                onClick={() => cancel()}
+                disabled={isSaving}
+              >
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="small"
+                onClick={() => edit()}
+                disabled={isSaving}
+              >
+                Edit
+              </button>
+              <button
+                className="small"
+                onClick={() => genGoals()}
+                disabled={isSaving}
+              >
+                I'm feeling lucky
+              </button>
+              <div>
+                {isSaving && (<Loader className="animate-spin text-sm" size={20} />)}
+              </div>
+            </>
+          )}
+        </div>
       </header>
       <div
         className={`overflow-auto p-2 h-full ${isSaving ? "opacity-50" : ""} ${

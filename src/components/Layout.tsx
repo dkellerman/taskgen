@@ -29,7 +29,7 @@ export function Layout() {
         <base target="_blank" />
         <meta name="description" content="Goals v0" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico?v=1" />
       </Head>
 
       <div className={`${font.className}`}>

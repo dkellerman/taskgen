@@ -180,7 +180,11 @@ export default function Chat() {
               }}
             />
 
-            <div className="flex flex-wrap justify-end gap-2 mt-3">
+            <div
+              className={`flex flex-wrap justify-end gap-2 mt-3 ${
+                isWaiting ? "opacity-50" : ""
+              }`}
+            >
               {curTask.reply ? (
                 <div title={curTask.reply.comment} className="text-sm mr-6">
                   <strong>Replied:</strong> {curTask.reply.type}

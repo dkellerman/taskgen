@@ -1,5 +1,5 @@
 import { chatPrompt } from "@/utils/prompts";
-import { openAI as llm } from "@/utils/llm";
+import { countTokens, openAI as llm } from "@/utils/llm";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { HttpResponseOutputParser } from "langchain/output_parsers";
 import { getUser, saveUser } from "@/utils/users";
@@ -33,7 +33,7 @@ export default async function handler(
     history,
     message,
   });
-  console.debug(prompt);
+  console.debug(prompt, countTokens(prompt));
 
   const stream = await llm.pipe(new HttpResponseOutputParser()).stream(prompt);
   const decoder = new TextDecoder();

@@ -1,13 +1,17 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import { indexGoals } from "@/utils/goals";
 import { getUser, saveUser } from "@/utils/users";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { countTokens, openAI as llm } from "@/utils/llm";
+import { genGoalsDocPrompt, GOAL_PERSONAS } from "@/utils/prompts";
+import { findSimilarTasks } from "@/utils/db";
+import { TaskVector, User } from "@/types";
 
 // PUT document content
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "PUT") {
+  if (req.method !== "PUT" && req.method !== "POST") {
     res.status(405).end();
     return;
   }
@@ -15,6 +19,11 @@ export default async function handler(
   const user = await getUser(req);
   if (!user) {
     res.status(401).json({ error: "User not found" });
+    return;
+  }
+
+  if (req.method === "POST") {
+    genGoals(req, res, user);
     return;
   }
 
@@ -30,4 +39,44 @@ export default async function handler(
   await saveUser(user);
 
   res.status(200).json(user.doc);
+}
+
+async function genGoals(req: NextApiRequest, res: NextApiResponse, user: User) {
+  const persona =
+    GOAL_PERSONAS[Math.floor(Math.random() * GOAL_PERSONAS.length)];
+  console.log("*** persona", persona);
+
+  const examples = (await findSimilarTasks(user.uid, persona, 5))
+    .filter((ex) => ex.task.reply?.type === "accept" || ex.similarity >= 0.7)
+    .slice(0, 3);
+
+  const prompt = await genGoalsDocPrompt.format({
+    persona,
+    examples: makeExamplesStr(examples),
+  });
+  console.debug(prompt, countTokens(prompt));
+
+  const response = await llm.invoke(prompt);
+  const content = (response.content as string)?.trim();
+  if (!content) {
+    res.status(500).json({ error: "Failed to generate goals." });
+    return;
+  }
+
+  res.status(200).json({ content });
+}
+
+function makeExamplesStr(examples: TaskVector[]) {
+  return examples.length
+    ? examples
+        .map((ex) =>
+          `
+    <example>
+      <goal>${ex.task.goal?.path ?? "N/A"}</goal>
+      <task>${ex.task.description}</task>
+    </example>
+  `.trim()
+        )
+        .join("\n")
+    : "N/A";
 }

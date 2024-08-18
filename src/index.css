@@ -28,7 +28,10 @@
 .prose {
   p,
   li {
-    @apply m-0;
+    @apply m-0 p-0;
+  }
+  ul {
+    @apply mt-1 pl-4;
   }
   a,
   a:visited {
