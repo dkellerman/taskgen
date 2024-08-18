@@ -104,12 +104,13 @@ export async function getRRules(user: User, texts: string[]): Promise<string> {
   return response.content as string;
 }
 
-export const EXAMPLE_GOALS_DOC = `
+export const EXAMPLE_GOALS_DOC =
+  `
 This is your goals document. You can use "#" to represent categories
 and "-" for items. Categories can represent groupings (e.g. "Health"),
 or time frames (e.g. "Daily"). You can also nest categories by using
-multiple hashes.
-
+multiple hashes.`.replace(/\n/g, " ") +
+  `
 Here is an example (click "I'm feeling lucky" to generate a random one!)
 
 # This year
