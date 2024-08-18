@@ -110,7 +110,7 @@ export default function Doc() {
                 onClick={() => genGoals()}
                 disabled={isSaving}
               >
-                I'm feeling lucky
+                I&apos;m feeling lucky
               </button>
               <div>
                 {isSaving && (<Loader className="animate-spin text-sm" size={20} />)}
