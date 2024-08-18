@@ -24,6 +24,7 @@ export default function Chat() {
 
   useEffect(() => {
     if (!user) return;
+    // TODO: this is a super-hack
     if (user.curTask.description !== "N/A") {
       setCurTask(user.curTask);
       setMessages(user.curTask.chatHistory);
@@ -178,7 +179,15 @@ export default function Chat() {
             <div
               className="prose"
               dangerouslySetInnerHTML={{
-                __html: marked.parse("**Task:** " + curTask.description),
+                __html: marked.parse(
+                  (curTask.goal
+                    ? "#### <u>Goal</u>: " +
+                      curTask.goal.path.replaceAll("|", " → ") +
+                      "\n\n"
+                    : "") +
+                    "**<u>Task</u>:** " +
+                    curTask.description
+                ),
               }}
             />
 

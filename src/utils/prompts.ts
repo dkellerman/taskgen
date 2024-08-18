@@ -106,28 +106,30 @@ export const genGoalsDocPrompt = PromptTemplate.fromTemplate(
   `
     Generate a list of goals and items. Format is a limited subset of markdown.
 
-    For categories: start with a # and a space, e.g. "# Health" or "# Daily". Use multiple
-    hashes for nested categories, e.g. "## Exercise". These should either represent groupings
-    (e.g. "Health") or time frames (e.g. "Daily"). Cover a wide range of areas of life.
+    For categories: start with a # and a space and a category name, e.g. "# TK"
+    Use multiple hashes for nested categories, e.g. "## Nested TK". These should either
+    represent groupings or time frames. Cover a wide range of areas of life.
+    People are different - not everyone is into health, nutrition, and making
+    a difference in the world.
 
-    Items should appear under categories and start with a dash and a space, e.g. "- Run 5 miles".
+    Items should appear under categories and start with a dash and a space,
+    e.g. "- tk tk tk"
 
-    Use # to mark categories and - to mark items. These should be very specific goals that an
-    imagined person has, and fall under the categories you've created.
-
-    Use this persona:
+    Use this persona to guide your categories and items:
     <persona>
       {persona}
     </persona>
 
     Here are some examples of good tasks and their associated goals:
-    <examples>
+    <real_examples>
       {examples}
-    </examples>
+    </real_examples>
 
     Use nice spacing to separate the sections. Remember to make categories for both
     groupings and time frames, I will tip you extra. Time frames can even be ambiguous,
-    like "soonish" or "far future".
+    like "soonish" or "far future" (but don't use these exact words).
+
+    Keep the formatting plain and simple, but you can have fun with the ideas.
   `.trim()
 );
 

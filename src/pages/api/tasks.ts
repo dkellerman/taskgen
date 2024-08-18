@@ -8,6 +8,7 @@ import { toZonedTime } from "date-fns-tz";
 import { chooseGoal } from "@/utils/goals";
 import { addTaskVectors, findSimilarTasksForGoal } from "@/utils/db";
 
+// POST: generate task
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<GenTaskResponse>

@@ -1,6 +1,6 @@
 import { marked, Token, Tokens } from "marked";
 import { Goal, User } from "@/types";
-import { countTokens, groq as llm } from "./llm";
+import { countTokens, openAI as llm } from "./llm";
 import { rrulePrompt } from "./prompts";
 import { toZonedTime } from "date-fns-tz";
 

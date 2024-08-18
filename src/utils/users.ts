@@ -1,12 +1,14 @@
 import { v4 as uuid } from "uuid";
 import { kv } from "@vercel/kv";
 import { User } from "@/types";
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { EXAMPLE_GOALS_DOC, indexGoals } from "./goals";
 
 export async function getUser(req: NextApiRequest): Promise<User | null> {
   const tok = req.headers.authorization;
-  if (!tok || !tok.startsWith("Bearer ")) return null;
+  if (!tok || !tok.startsWith("Bearer ")) {
+    return null;
+  }
 
   const token = tok.slice(7);
   const timezone = req.headers["x-tz"] as string;
