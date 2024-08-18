@@ -24,7 +24,7 @@
     }
   }
 
-  .prose {
+  .prose.custom {
     @apply max-w-none;
     hr {
       @apply my-6;

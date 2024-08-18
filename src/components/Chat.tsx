@@ -172,7 +172,7 @@ export default function Chat() {
         {!!curTask && (
           <li key="task" className="task">
             <div
-              className="prose"
+              className="prose custom"
               dangerouslySetInnerHTML={{
                 __html: marked.parse(makeTaskDescription(curTask)),
               }}
@@ -220,7 +220,7 @@ export default function Chat() {
           <li key={`msg-${i}`} className={`msg-${msg.from}`}>
             <div
               ref={i === messages.length - 1 ? curMessageRef : null}
-              className="prose"
+              className="prose custom"
               dangerouslySetInnerHTML={{
                 __html: marked.parse(msg.message),
               }}
