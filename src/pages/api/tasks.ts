@@ -6,6 +6,7 @@ import { getUser, saveUser } from "@/utils/users";
 import { taskGenPrompt, taskGenSchema } from "@/utils/prompts";
 import { toZonedTime } from "date-fns-tz";
 import { chooseGoal } from "@/utils/goals";
+import { addTaskVectors } from "@/utils/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -56,6 +57,7 @@ export default async function handler(
   task.tags = response.tags || [];
   user.tasks.push(task);
   await saveUser(user);
+  await addTaskVectors([{ userId: user.uid, task }]);
 
   res.status(200).json({ task });
 }

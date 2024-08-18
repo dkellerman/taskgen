@@ -1,3 +1,4 @@
+import { addTaskVectors } from "@/utils/db";
 import { getUser, saveUser } from "@/utils/users";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -31,6 +32,7 @@ export default async function handlerWithUser(
     created: new Date().toISOString(),
   };
   await saveUser(user);
+  await addTaskVectors([{ userId: user.uid, task }], { update: true });
 
   res.status(200).json(task.reply);
 }
