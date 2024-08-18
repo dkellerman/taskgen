@@ -31,13 +31,14 @@ export default function Doc() {
     if (!user || !editorRef.current) return;
     setIsSaving(true);
     try {
-      await apiFetch<GoalsDoc>("docs", {
+      const newDoc = await apiFetch<GoalsDoc>("docs", {
         method: "PUT",
         body: {
           uid: user.doc.uid,
           content: editorRef.current.innerText,
         },
       });
+      editorRef.current!.innerHTML = formatDocContentAsHTML(newDoc.content);
     } catch (e) {
       console.error("Failed saving", e);
       alert("Something went wrong saving the document. Please try again.");
@@ -78,7 +79,11 @@ export default function Doc() {
       <header className="border-b border-gray-300 pb-2 flex justify-start items-center">
         <h2 className="text-2xl mr-8 -mt-1.5">Goals</h2>
 
-        <div className={`flex items-center gap-3 w-full ${isSaving ? "opacity-50" : ""}`}>
+        <div
+          className={`flex items-center gap-3 w-full ${
+            isSaving ? "opacity-50" : ""
+          }`}
+        >
           {isEditing ? (
             <>
               <button
@@ -110,10 +115,12 @@ export default function Doc() {
                 onClick={() => genGoals()}
                 disabled={isSaving}
               >
-                I’m feeling lucky
+                Randomize my life
               </button>
               <div>
-                {isSaving && (<Loader className="animate-spin text-sm" size={20} />)}
+                {isSaving && (
+                  <Loader className="animate-spin text-sm" size={20} />
+                )}
               </div>
             </>
           )}

@@ -112,7 +112,7 @@ or time frames (e.g. "# Daily"). You can also nest categories by using
 multiple #'s (e.g. "## Later this year").`.replace(/\n/g, " ") +
   `
 
-Here is an example (click "I'm feeling lucky" to generate a random one!)
+Here is an example (click "Randomize my life" to generate a random one!)
 
 # This year
 - Write a book
