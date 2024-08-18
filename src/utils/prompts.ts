@@ -126,7 +126,8 @@ export const genGoalsDocPrompt = PromptTemplate.fromTemplate(
     </examples>
 
     Remember make categories for both groupings and time frames, I will tip you extra.
-    Time frames can even be ambiguous, like "soonish" or "far future".
+    Time frames can even be ambiguous, like "soonish" or "far future". Use nice
+    spacing to separate the sections.
   `.trim()
 );
 
