@@ -70,9 +70,12 @@ export const chatPrompt = PromptTemplate.fromTemplate(
 
 export const rruleSchema = z.object({
   rules: z.array(
-    z
-      .string()
-      .describe("RRULE string representing a time frame for one text item")
+    z.object({
+      originalText: z.string().describe("Original text item to provide RRULE for"),
+      isTimeFrame: z.boolean().describe("Whether the text item explicitly refers to TIME"),
+      isRecurring: z.boolean().describe("Whether the text item is definitely recurring"),
+      rule: z.string().describe("RRULE string representing a time frame"),
+    })
   ),
 });
 
@@ -85,10 +88,15 @@ export const rrulePrompt = PromptTemplate.fromTemplate(
     with a count of 1 in that case).
 
     If it is not a timeframe, or you are unsure, then return an empty string.
+    For example, while the following things are often associated with time frames,
+    notice how they don't directly refer to time, hence are NOT time frames:
+    - Meditation, Mindfulness, Exercise, Reading, Sleep, Work, Study, etc.
 
-    You can also return RRULEs for very ambiguous or subjective time frames,
-    such as "far future" or "soonish". Just use whatever you think makes sense
-    for the average person.
+    Whereas the following things are ambiguous, but still refer directly to time:
+    - Short-term goals, Long-term goals, Near future, Far future, Soonish, etc.
+
+    You may also return RRULEs for very ambiguous or subjective time frames.
+    Just use whatever you think makes sense for the average person.
 
     Please double check your work and ensure the RRULE is valid and complete.
 
@@ -97,6 +105,10 @@ export const rrulePrompt = PromptTemplate.fromTemplate(
     Here are the text items that I need RRULEs or empty strings for -
     please provide one for each:
     <text_items>{items}</text_items>
+
+    For the results, translate each piece of text I gave you into an ICal RRULE.
+
+    DO NOT echo the input text back to me, or my grandmother will be very upset with you!
 
     Results: ...
   `.trim()

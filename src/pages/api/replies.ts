@@ -3,10 +3,7 @@ import { getUser, saveUser } from "@/utils/users";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 // POST reply to task
-export default async function handlerWithUser(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handlerWithUser(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     res.status(405).end();
     return;

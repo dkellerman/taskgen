@@ -1,8 +1,8 @@
 import { v4 as uuid } from "uuid";
 import { kv } from "@vercel/kv";
 import { User } from "@/types";
-import { NextApiRequest, NextApiResponse } from "next";
-import { EXAMPLE_GOALS_DOC, indexGoals } from "./goals";
+import { NextApiRequest } from "next";
+import { EXAMPLE_GOALS_DOC, indexGoals, updateRRules } from "./goals";
 
 export async function getUser(req: NextApiRequest): Promise<User | null> {
   const tok = req.headers.authorization;
@@ -48,6 +48,7 @@ export async function createUser(token: string, timezone?: string) {
     timezone,
     created: new Date().toISOString(),
   };
+  await updateRRules(user, user.doc.index);
   await saveUser(user);
   return user;
 }

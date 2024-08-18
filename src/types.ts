@@ -26,6 +26,11 @@ export interface Task {
   created: string;
 }
 
+export interface TaskVector {
+  task: Task;
+  similarity: number;
+};
+
 export type TaskReplyType = "accept" | "reject" | "later";
 export interface TaskReply {
   type: TaskReplyType;
@@ -48,9 +53,8 @@ export interface Goal {
   listDepth?: number;
   doneAt?: string;
   lastUsedAt?: string;
+  rrule?: string;
   created: string;
 }
 
 export type GenTaskResponse = { task: Task } | { error: string };
-
-export type TaskVector = { task: Task; similarity: number };

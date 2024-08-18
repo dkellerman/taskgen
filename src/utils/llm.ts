@@ -10,7 +10,7 @@ export const groq = new ChatGroq({
 
 export const openAI = new ChatOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  model: "gpt-4o-mini",
+  model: "gpt-3.5-turbo",
   temperature: 0.7,
 });
 

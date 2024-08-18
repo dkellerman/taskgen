@@ -4,10 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { HttpResponseOutputParser } from "langchain/output_parsers";
 import { getUser, saveUser } from "@/utils/users";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     res.status(405).end();
     return;
@@ -44,16 +41,8 @@ export default async function handler(
     res.write(chunk);
   }
 
-  user.curTask.chatHistory.push({
-    from: "user",
-    message,
-    sentAt: new Date().toISOString(),
-  });
-  user.curTask.chatHistory.push({
-    from: "bot",
-    message: reply,
-    sentAt: new Date().toISOString(),
-  });
+  user.curTask.chatHistory.push({ from: "user", message, sentAt: new Date().toISOString() });
+  user.curTask.chatHistory.push({ from: "bot", message: reply, sentAt: new Date().toISOString() });
   await saveUser(user);
 
   res.end();
