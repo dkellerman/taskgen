@@ -112,11 +112,9 @@ export default function Doc() {
         </div>
       </header>
       <div
-        className={clsx('prose custom', 'overflow-auto h-full', {
-          'opacity-50': isSaving,
-          'border-gray-400 border p-2': isEditing,
-          'p-0': !isEditing,
-        })}
+        className={`prose custom overflow-auto h-full ${
+          isEditing ? 'border-gray-400 border p-2' : 'p-0'
+        } ${isSaving ? 'opacity-50' : ''}`}
         ref={editorRef}
         contentEditable={isEditing}
         onClick={e => e.stopPropagation()}
