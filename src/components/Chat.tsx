@@ -26,10 +26,10 @@ export default function Chat() {
     if (!user) return;
     if (user.curTask.description !== "N/A") {
       setCurTask(user.curTask);
+      setMessages(user.curTask.chatHistory);
     } else {
       setWelcomeMessage();
     }
-    setMessages(user.curTask.chatHistory);
   }, [user]);
 
   function addMessage(from: MessageFrom, message: string) {
