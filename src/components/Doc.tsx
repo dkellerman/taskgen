@@ -105,7 +105,7 @@ export default function Doc() {
                 Edit
               </button>
               <button className="small" onClick={() => genGoals()} disabled={isSaving}>
-                Randomize my life
+                Randomize my life!
               </button>
             </>
           )}
