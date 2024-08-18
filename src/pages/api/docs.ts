@@ -7,6 +7,7 @@ import { findSimilarTasks } from "@/utils/db";
 import { TaskVector, User } from "@/types";
 
 // PUT document content
+// POST generate sample goals doc
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
