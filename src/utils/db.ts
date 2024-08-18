@@ -7,7 +7,7 @@ import {
   VercelClient,
 } from "@vercel/postgres";
 import { kv } from "@vercel/kv";
-import { Goal, Task } from "@/types";
+import { Goal, Task, TaskVector } from "@/types";
 import { countTokens, openAIEmbedding as model } from "./llm";
 
 export let client: VercelClient | VercelPoolClient | null = null;
@@ -157,13 +157,12 @@ export async function addTaskVectors(
   await client.query("COMMIT");
 }
 
-type TaskVector = { task: Task; similarity: number };
-
 export async function findSimilarTasksForGoal(
   userId: string | null,
-  goal: Goal
+  goal: Goal,
+  limit = 5
 ): Promise<TaskVector[]> {
-  return findSimilarTasks(userId, goal.text);
+  return findSimilarTasks(userId, goal.text, limit);
 }
 
 export async function findSimilarTasks(
@@ -178,7 +177,7 @@ export async function findSimilarTasks(
   const result = await client.sql<TaskVector>`
     SELECT task, 1 - (embedding <=> ${queryEmbedding})
       AS similarity FROM user_tasks
-      WHERE (${userId} = 'all' OR user_id = ${userId})
+      WHERE (${userId} = 'all' OR user_id = ${userId} OR user_id IS NULL)
       ORDER BY similarity DESC LIMIT ${limit};
   `;
   return result.rows;

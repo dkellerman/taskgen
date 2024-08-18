@@ -4,20 +4,27 @@ import { z } from "zod";
 export const taskGenPrompt = PromptTemplate.fromTemplate(
   `
     Generate a quick 5-10 minute task for the user to complete towards
-    the following goal:
-    <goal>{goal}</goal>
+    the following goal: <goal>{goal}</goal>
 
     For reference the goal is organized into the following categories:
     <goal_category>{category}</goal_category>
 
+    Here are some examples of tasks the user has accepted in the past:
+    <good_examples>
+      {goodExamples}
+    </good_examples>
+
+    Here are some examples of tasks the user has rejected in the past:
+    <bad_examples>
+      {badExamples}
+    </bad_examples>
+
     You can use very basic markdown to format the tasks, only: bold, italics,
     or a link to an exceedingly good and specific resource.
 
-    Please take into account the user's current local time:
-    <time>{now}</time>
+    Please take into account the user's current local time: <time>{now}</time>
 
-    Special note from the user:
-    <note>{userMsg}</note>
+    Special note from the user: <note>{userMsg}</note>
 
     Task: ...
   `

@@ -1,12 +1,12 @@
 import { v4 as uuid } from "uuid";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { GenTaskResponse, Task } from "@/types";
+import { GenTaskResponse, Task, TaskVector } from "@/types";
 import { openAI as llm } from "@/utils/llm";
 import { getUser, saveUser } from "@/utils/users";
 import { taskGenPrompt, taskGenSchema } from "@/utils/prompts";
 import { toZonedTime } from "date-fns-tz";
 import { chooseGoal } from "@/utils/goals";
-import { addTaskVectors } from "@/utils/db";
+import { addTaskVectors, findSimilarTasksForGoal } from "@/utils/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,23 +23,26 @@ export default async function handler(
     return;
   }
 
+  // pick goal
   const goal = chooseGoal(user.doc.index) ?? undefined;
 
-  const task: Task = {
-    uid: uuid(),
-    description: "",
-    chatHistory: [],
-    tags: [],
-    created: new Date().toISOString(),
-    goal,
-  };
+  // find similar tasks via embeddings
+  const examples = goal ? await findSimilarTasksForGoal(user.uid, goal) : [];
+  let goodExamples = examples
+    .filter((ex) => ex.similarity >= 0.8 || ex.task.reply?.type === "accept")
+    .slice(0, 3);
+  let badExamples = examples
+    .filter((ex) => ex.similarity <= 0.5 || ex.task.reply?.type === "reject")
+    .slice(0, 3);
 
-  const category = goal?.path.split("|").slice(0, -1).join(" -> ") || "N/A";
+  // generate prompt
   const prompt = await taskGenPrompt.format({
     goal: goal?.text || user.doc.content,
-    category,
+    category: goal?.path.split("|").slice(0, -1).join(" -> ") || "N/A",
     now: toZonedTime(new Date(), user.timezone ?? "UTC"),
     userMsg: req.body?.userMsg ?? "N/A",
+    goodExamples: makeExamplesStr(goodExamples, "good"),
+    badExamples: makeExamplesStr(badExamples, "bad"),
   });
   console.debug(prompt);
 
@@ -52,12 +55,35 @@ export default async function handler(
     return;
   }
 
-  if (goal) goal.lastUsedAt = new Date().toISOString();
-  task.description = response.description;
-  task.tags = response.tags || [];
+  // add task
+  const task: Task = {
+    uid: uuid(),
+    description: response.description,
+    chatHistory: [],
+    tags: response.tags || [],
+    created: new Date().toISOString(),
+    goal,
+  };
   user.tasks.push(task);
+  if (goal) goal.lastUsedAt = new Date().toISOString();
+
   await saveUser(user);
   await addTaskVectors([{ userId: user.uid, task }]);
 
   res.status(200).json({ task });
+}
+
+function makeExamplesStr(examples: TaskVector[], type: "good" | "bad") {
+  return examples.length
+    ? examples
+        .map((ex) =>
+          `
+            <${type}_example>
+              <task>${ex.task.description}</task>
+              <comment>${ex.task.reply?.comment ?? "N/A"}</comment>
+            </${type}_example>
+          `.trim()
+        )
+        .join("\n")
+    : "N/A";
 }

@@ -73,7 +73,6 @@ export function chooseGoal(goals: Record<string, Goal>): Goal | null {
   const eligibleGoals = Object.values(goals).filter(
     (g) => !g.doneAt && !!g.listDepth
   );
-  console.debug("eligibleGoals", eligibleGoals.map((g) => g.text));
   if (eligibleGoals.length === 0) return null;
 
   // pick a random goal sometimes
@@ -89,7 +88,6 @@ export function chooseGoal(goals: Record<string, Goal>): Goal | null {
     if (!b.lastUsedAt) return 1;
     return new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime();
   });
-  console.debug("SORTED eligibleGoals", eligibleGoals.map((g) => g.text));
   return eligibleGoals[eligibleGoals.length - 1];
 }
 
@@ -102,7 +100,7 @@ export async function getRRules(user: User, texts: string[]): Promise<string> {
   console.debug(prompt);
 
   const response = await llm.invoke(prompt);
-  // console.log("*****", response);
+  console.debug("rrule resp", response);
   return response.content as string;
 }
 

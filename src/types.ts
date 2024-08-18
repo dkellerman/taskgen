@@ -52,3 +52,5 @@ export interface Goal {
 }
 
 export type GenTaskResponse = { task: Task } | { error: string };
+
+export type TaskVector = { task: Task; similarity: number };
