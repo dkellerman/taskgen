@@ -24,8 +24,11 @@
     }
   }
 
-  .prose {
-    @apply max-w-none;
+  .gdoc .prose,
+  .chat .prose {
+    & {
+      @apply max-w-none;
+    }
     & hr {
       @apply my-6;
     }
