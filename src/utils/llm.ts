@@ -1,5 +1,6 @@
+import { encoding_for_model, TiktokenModel } from "tiktoken";
 import { ChatGroq } from "@langchain/groq";
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 
 export const groq = new ChatGroq({
   apiKey: process.env.GROQ_API_KEY,
@@ -12,3 +13,18 @@ export const openAI = new ChatOpenAI({
   model: "gpt-4o-mini",
   temperature: 0.5,
 });
+
+export const openAIEmbedding = new OpenAIEmbeddings({
+  openAIApiKey: process.env.OPENAI_API_KEY,
+  modelName: "text-embedding-ada-002",
+});
+
+export async function countTokens(
+  text: string,
+  model: TiktokenModel = "text-embedding-ada-002"
+): Promise<number> {
+  const enc = encoding_for_model(model);
+  const tokens = enc.encode(text);
+  enc.free();
+  return tokens.length;
+}

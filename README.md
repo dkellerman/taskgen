@@ -8,6 +8,12 @@
 - `vercel pull`
 - `vercel dev`
 
+## db
+
+- for prod: `ln -s .vercel/.env.development.local .env.local`
+- otherwise add `.env.local` and set env vars below
+- `npm run db [create|...]`
+
 ## env vars:
 
 - OPENAI_API_KEY
