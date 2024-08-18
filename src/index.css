@@ -25,7 +25,8 @@
   }
 }
 
-.prose.custom {
+.prose.custom,
+#doc-content {
   @apply max-w-none;
   hr {
     @apply my-6;
