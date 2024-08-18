@@ -82,7 +82,7 @@ export default function Doc() {
   }
 
   return (
-    <div className="p-3 md:px-6 md:py-8 h-full flex flex-col gap-4">
+    <div className="gdoc p-3 md:px-6 md:py-8 h-full flex flex-col gap-4">
       <header className="border-b border-gray-300 pb-2 flex items-center">
         <h2 className="text-2xl mr-8 -mt-1.5">Goals</h2>
 
@@ -112,8 +112,7 @@ export default function Doc() {
         </div>
       </header>
       <div
-        id="doc-content"
-        className={clsx('prose custom overflow-auto h-full', {
+        className={clsx('prose overflow-auto h-full', {
           'opacity-50': isSaving,
           'border-gray-400 border p-2': isEditing,
           'p-0': !isEditing,
