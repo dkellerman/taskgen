@@ -60,20 +60,22 @@ function parseList(
 
 export function chooseGoal(goals: Record<string, Goal>): Goal | null {
   // filter goals that are not done and not categories
-  const eligibleGoals = Object.values(goals)
-    .filter(g => !!g.listDepth)
-    .filter(g => {
-      console.log('=> goal', g.text, g.rrule);
-      if (!g.rrule) return true;
-      const r = RRule.fromString(g.rrule);
-      const betw = r.between(new Date(), new Date());
-      if (!!betw?.length) {
-        console.debug('\t* ELIG NOW', g.text, betw);
-      } else {
-        console.debug('\t* NOT ELIG NOW', g.text);
-      }
-      return !!betw?.length;
-    });
+  const now = new Date();
+  now.setMilliseconds(0);
+  console.log('NOW', now);
+  const eligibleGoals = Object.values(goals).filter(g => {
+    // look up the tree for a containing rrule
+    const rrule = getNearestRRule(goals, g.path);
+    console.log('=> goal', g.text, 'path ->', g.path, 'nearestRR ->', rrule);
+    if (!rrule) return true;
+    const rr = RRule.fromString(rrule);
+    // no occurences before now, and at least one occurence in the future
+    const active = !rr.before(now, false) && !!rr.after(now, false) && !g.doneAt;
+    console.debug('\t* before', rr.before(now, false));
+    console.debug('\t* after', rr.after(now, false));
+    console.debug('\t* is active', g.text, active);
+    return active;
+  });
   if (eligibleGoals.length === 0) return null;
 
   // pick a random goal sometimes
@@ -135,7 +137,7 @@ export async function fetchRRules(user: User, texts: string[]): Promise<Array<RR
   });
   console.debug(prompt, countTokens(prompt));
 
-  const response = await llm.withStructuredOutput(rruleSchema).invoke(prompt);
+  const response = await llm.withStructuredOutput(rruleSchema, { name: 'rules' }).invoke(prompt);
   console.debug('rrule resp', response);
 
   const rrules: Array<RRule | null> = [];
@@ -145,10 +147,16 @@ export async function fetchRRules(user: User, texts: string[]): Promise<Array<RR
       continue;
     }
 
-    const ruleStr = response.rules[i].rule
+    let ruleStr = response.rules[i].rule
       .split(';')
       .map(s => s.replace(/BYYEAR=(\d+)/, 'DTSTART=$1-01-01T00:00:00Z;UNTIL=$1-12-31T23:59:59Z'))
       .join(';');
+    if (!ruleStr.includes('DTSTART=')) {
+      const dtstart = response.rules[i].dtstart
+        ? new Date(response.rules[i].dtstart).toISOString()
+        : new Date().toISOString().replace(/T.*$/, 'T00:00:00Z');
+      ruleStr += ';DTSTART=' + dtstart;
+    }
     const text = texts[i];
     try {
       const rule = RRule.fromString(ruleStr);
@@ -163,6 +171,13 @@ export async function fetchRRules(user: User, texts: string[]): Promise<Array<RR
 
 function getRRuleKey(goalStr: string): string {
   return 'rrule:' + goalStr.toLowerCase().trim().replace(/\s/g, '_');
+}
+
+function getNearestRRule(index: Record<string, Goal>, path: string) {
+  if (index[path]?.rrule) return index[path].rrule;
+  const parents = path.split('|').slice(0, -1);
+  if (parents.length === 0) return null;
+  return getNearestRRule(index, parents.join('|'));
 }
 
 export const EXAMPLE_GOALS_DOC =

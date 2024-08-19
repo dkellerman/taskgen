@@ -1,5 +1,5 @@
-import { PromptTemplate } from "@langchain/core/prompts";
-import { z } from "zod";
+import { PromptTemplate } from '@langchain/core/prompts';
+import { z } from 'zod';
 
 export const taskGenPrompt = PromptTemplate.fromTemplate(
   `
@@ -27,18 +27,14 @@ export const taskGenPrompt = PromptTemplate.fromTemplate(
     Special note from the user: <note>{userMsg}</note>
 
     Task: ...
-  `
+  `,
 );
 
 export const taskGenSchema = z.object({
-  description: z
-    .string()
-    .describe("Short description of the task, using limited markdown"),
+  description: z.string().describe('Short description of the task, using limited markdown'),
   tags: z
     .array(z.string())
-    .describe(
-      "List of tags to categorize the task. Only lowercase letters and hyphens"
-    ),
+    .describe('List of tags to categorize the task. Only lowercase letters and hyphens'),
 });
 
 export const chatPrompt = PromptTemplate.fromTemplate(
@@ -65,17 +61,20 @@ export const chatPrompt = PromptTemplate.fromTemplate(
     Focus on action, and keep your responses brief.
 
     Your response: ...
-  `.trim()
+  `.trim(),
 );
 
 export const rruleSchema = z.object({
   rules: z.array(
     z.object({
-      originalText: z.string().describe("Original text item to provide RRULE for"),
-      isTimeFrame: z.boolean().describe("Whether the text item explicitly refers to TIME"),
-      isRecurring: z.boolean().describe("Whether the text item is definitely recurring"),
-      rule: z.string().describe("RRULE string representing a time frame"),
-    })
+      originalText: z.string().describe('Original text item to provide RRULE for'),
+      isTimeFrame: z.boolean().describe('Whether the text item explicitly refers to TIME'),
+      isRecurring: z.boolean().describe('Whether the text item is definitely recurring'),
+      dtstart: z
+        .string()
+        .describe('DTSTART date for the RRULE - when did the recurrence period start?'),
+      rule: z.string().describe('RRULE string representing a time frame'),
+    }),
   ),
 });
 
@@ -111,7 +110,7 @@ export const rrulePrompt = PromptTemplate.fromTemplate(
     DO NOT echo the input text back to me, or my grandmother will be very upset with you!
 
     Results: ...
-  `.trim()
+  `.trim(),
 );
 
 export const genGoalsDocPrompt = PromptTemplate.fromTemplate(
@@ -142,7 +141,7 @@ export const genGoalsDocPrompt = PromptTemplate.fromTemplate(
     like "soonish" or "far future" (but don't use these exact words).
 
     Keep the formatting plain and simple, but you can have fun with the ideas.
-  `.trim()
+  `.trim(),
 );
 
 export const GOAL_PERSONAS = [
