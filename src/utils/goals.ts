@@ -60,22 +60,7 @@ function parseList(
 
 export function chooseGoal(goals: Record<string, Goal>): Goal | null {
   // filter goals that are not done and not categories
-  const now = new Date();
-  now.setMilliseconds(0);
-  console.log('NOW', now);
-  const eligibleGoals = Object.values(goals).filter(g => {
-    // look up the tree for a containing rrule
-    const rrule = getNearestRRule(goals, g.path);
-    console.log('=> goal', g.text, 'path ->', g.path, 'nearestRR ->', rrule);
-    if (!rrule) return true;
-    const rr = RRule.fromString(rrule);
-    // no occurences before now, and at least one occurence in the future
-    const active = !rr.before(now, false) && !!rr.after(now, false) && !g.doneAt;
-    console.debug('\t* before', rr.before(now, false));
-    console.debug('\t* after', rr.after(now, false));
-    console.debug('\t* is active', g.text, active);
-    return active;
-  });
+  const eligibleGoals = Object.values(goals).filter(g => !g.doneAt && !isNil(g.listDepth));
   if (eligibleGoals.length === 0) return null;
 
   // pick a random goal sometimes
