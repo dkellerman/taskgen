@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const historyCt = 5;
   const history = user.curTask.chatHistory
-    .slice(-historyCt, user.curTask.chatHistory.length)
+    .slice(-historyCt)
     .map((msg) => `<${msg.from}>${msg.message}</${msg.from}>`)
     .join("\n");
 

@@ -67,7 +67,7 @@ yargs(hideBin(process.argv))
       const { query, limit } = argv;
       console.debug(`Search query: ${query}, Limit: ${limit}`);
       const client = await db.useNonPooledClient();
-      console.log("\n=== Results ===\n");
+      console.info("\n=== Results ===\n");
       try {
         const tasks = await db.findSimilarTasks("all", query as string, limit);
         console.info(tasks.map((t) => `* ${t.task.description} [${t.similarity}]\n`).join("\n"));

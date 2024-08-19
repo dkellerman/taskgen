@@ -43,7 +43,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 async function genGoals(req: NextApiRequest, res: NextApiResponse, user: User) {
   const persona =
     GOAL_PERSONAS[Math.floor(Math.random() * GOAL_PERSONAS.length)];
-  console.log("*** persona", persona);
 
   const examples = (await findSimilarTasks(user.uid, persona, 5))
     .filter((ex) => ex.task.reply?.type === "accept" || ex.similarity >= 0.7)
