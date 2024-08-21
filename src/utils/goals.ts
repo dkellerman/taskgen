@@ -167,19 +167,9 @@ function getNearestRRule(index: Record<string, Goal>, path: string) {
 
 export const EXAMPLE_GOALS_DOC =
   `
-This is your goals document. You can use “#” to make a category and “-”
-for an item. Categories can be groupings (e.g. “# Health”), or time frames
-(e.g. “# Daily”). You can also nest categories by using multiple hashes
-(e.g. “## Later this year”). You can use some
-[markdown](https://www.markdownguide.org/basic-syntax/) to style things.
+This is your goals doc. Use "#" for headings and "-" for lists.
 
-Here is an example - click “Randomize my life” above to generate a random one!
-`
-    .split('\n\n')
-    .map(l => l.replace(/\n/g, ' '))
-    .join('\n\n')
-    .trim() +
-  `
+For example:
 
 # This year
 - Write a book
