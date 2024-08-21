@@ -129,7 +129,7 @@ export default function Chat() {
         from: 'welcome',
         message: `
           <strong>Welcome to Taskgen!</strong>
-          Edit your goals on the left. Generate a task, and chat with me about
+          Edit your goals on the left. Generate a task, and chat about
           it here. You can accept or reject the tasks, and leave comments so
           they will improve over time.
         `.trim(),

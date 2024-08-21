@@ -167,9 +167,7 @@ function getNearestRRule(index: Record<string, Goal>, path: string) {
 
 export const EXAMPLE_GOALS_DOC =
   `
-This is your goals doc. Use "#" for headings and "-" for lists.
-
-For example:
+This is an example goals doc. Use "#" to create headings and "-" for lists.
 
 # This year
 - Write a book
@@ -183,6 +181,6 @@ For example:
 - Exercise
 ## Evening
 - Read a book
-`;
+`.trim();
 
 export const EXAMPLE_GOALS_INDEX = indexGoals(EXAMPLE_GOALS_DOC);
